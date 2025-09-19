@@ -1,18 +1,26 @@
 import React, { useState, useEffect, createContext, useContext } from 'react';
-import { BrowserRouter as Router, Route, Routes, Link, useNavigate } from 'react-router-dom';
+import { BrowserRouter as Router, Route, Routes, Link, useNavigate, Outlet, Navigate } from 'react-router-dom';
+import SweetList from './SweetList'; // Import SweetList
 import './App.css';
 
 // Auth Context
-const AuthContext = createContext(null);
+export const AuthContext = createContext(null);
 
 const AuthProvider = ({ children }) => {
   const [token, setToken] = useState(localStorage.getItem('token'));
-  const [user, setUser] = useState(null); 
+  const [user, setUser] = useState(null); // { id, role }
 
   useEffect(() => {
     if (token) {
-      const decoded = JSON.parse(atob(token.split('.')[1])); 
-      setUser(decoded.user);
+      try {
+        const decoded = JSON.parse(atob(token.split('.')[1])); // Basic JWT decode
+        setUser(decoded.user);
+      } catch (e) {
+        console.error("Failed to decode token", e);
+        localStorage.removeItem('token');
+        setToken(null);
+        setUser(null);
+      }
     } else {
       setUser(null);
     }
@@ -34,6 +42,21 @@ const AuthProvider = ({ children }) => {
       {children}
     </AuthContext.Provider>
   );
+};
+
+// Private Route Component
+const PrivateRoute = ({ children, allowedRoles }) => {
+  const { user, token } = useContext(AuthContext);
+
+  if (!token) {
+    return <Navigate to="/login" replace />;
+  }
+
+  if (allowedRoles && user && !allowedRoles.includes(user.role)) {
+    return <Navigate to="/" replace />;
+  }
+
+  return children;
 };
 
 // Components
@@ -69,7 +92,7 @@ const Login = () => {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ username, password, role: isRegister ? 'customer' : undefined }),
+        body: JSON_stringify({ username, password, role: isRegister ? 'customer' : undefined }),
       });
 
       const data = await response.json();
@@ -78,14 +101,17 @@ const Login = () => {
         if (!isRegister) {
           login(data.token);
           navigate('/');
-        } else {
+        }
+        else {
           setMessage('Registration successful! Please log in.');
           setIsRegister(false);
         }
-      } else {
+      }
+      else {
         setMessage(data.msg || 'An error occurred');
       }
-    } catch (error) {
+    }
+    catch (error) {
       setMessage('Network error');
       console.error('Auth error:', error);
     }
@@ -135,6 +161,7 @@ const Navbar = () => {
   return (
     <nav className="navbar">
       <Link to="/">Home</Link>
+      {user && <Link to="/sweets">Sweets</Link>}
       {!user ? (
         <Link to="/login">Login/Register</Link>
       ) : (
@@ -153,7 +180,15 @@ function App() {
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/login" element={<Login />} />
-          
+            <Route
+              path="/sweets"
+              element={
+                <PrivateRoute>
+                  <SweetList />
+                </PrivateRoute>
+              }
+            />
+            {/* Admin routes will go here */}
           </Routes>
         </div>
       </AuthProvider>
