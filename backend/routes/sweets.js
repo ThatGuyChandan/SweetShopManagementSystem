@@ -1,29 +1,44 @@
 const express = require('express');
 const router = express.Router();
+const { check, validationResult } = require('express-validator');
 const Sweet = require('../models/Sweet');
 const { auth, admin } = require('../middleware/auth');
 
 // @route   POST /api/sweets
 // @desc    Add a new sweet
 // @access  Private (Admin only)
-router.post('/', auth, admin, async (req, res) => {
-  const { name, category, price, quantity } = req.body;
+router.post(
+  '/',
+  [auth, admin, [
+    check('name', 'Name is required').not().isEmpty(),
+    check('category', 'Category is required').not().isEmpty(),
+    check('price', 'Price is required').isNumeric(),
+    check('quantity', 'Quantity is required').isNumeric(),
+  ]],
+  async (req, res) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(400).json({ errors: errors.array() });
+    }
 
-  try {
-    const newSweet = new Sweet({
-      name,
-      category,
-      price,
-      quantity,
-    });
+    const { name, category, price, quantity } = req.body;
 
-    const sweet = await newSweet.save();
-    res.json(sweet);
-  } catch (err) {
-    console.error(err.message);
-    res.status(500).send('Server Error');
+    try {
+      const newSweet = new Sweet({
+        name,
+        category,
+        price,
+        quantity,
+      });
+
+      const sweet = await newSweet.save();
+      res.json(sweet);
+    } catch (err) {
+      console.error(err.message);
+      res.status(500).json({ msg: 'Server Error' });
+    }
   }
-});
+);
 
 // @route   GET /api/sweets
 // @desc    Get all sweets
@@ -34,7 +49,7 @@ router.get('/', auth, async (req, res) => {
     res.json(sweets);
   } catch (err) {
     console.error(err.message);
-    res.status(500).send('Server Error');
+    res.status(500).json({ msg: 'Server Error' });
   }
 });
 
@@ -66,14 +81,14 @@ router.get('/search', auth, async (req, res) => {
     res.json(sweets);
   } catch (err) {
     console.error(err.message);
-    res.status(500).send('Server Error');
+    res.status(500).json({ msg: 'Server Error' });
   }
 });
 
 // @route   PUT /api/sweets/:id
 // @desc    Update a sweet
 // @access  Private (Admin only)
-router.put('/:id', auth, admin, async (req, res) => {
+router.put('/:id', [auth, admin], async (req, res) => {
   const { name, category, price, quantity } = req.body;
 
   // Build sweet object
@@ -97,7 +112,7 @@ router.put('/:id', auth, admin, async (req, res) => {
     res.json(sweet);
   } catch (err) {
     console.error(err.message);
-    res.status(500).send('Server Error');
+    res.status(500).json({ msg: 'Server Error' });
   }
 });
 
@@ -115,7 +130,7 @@ router.delete('/:id', auth, admin, async (req, res) => {
     res.json({ msg: 'Sweet removed' });
   } catch (err) {
     console.error(err.message);
-    res.status(500).send('Server Error');
+    res.status(500).json({ msg: 'Server Error' });
   }
 });
 
@@ -142,7 +157,7 @@ router.post('/:id/purchase', auth, async (req, res) => {
     res.json(sweet);
   } catch (err) {
     console.error(err.message);
-    res.status(500).send('Server Error');
+    res.status(500).json({ msg: 'Server Error' });
   }
 });
 
@@ -165,7 +180,7 @@ router.post('/:id/restock', auth, admin, async (req, res) => {
     res.json(sweet);
   } catch (err) {
     console.error(err.message);
-    res.status(500).send('Server Error');
+    res.status(500).json({ msg: 'Server Error' });
   }
 });
 
