@@ -119,4 +119,54 @@ router.delete('/:id', auth, admin, async (req, res) => {
   }
 });
 
+// @route   POST /api/sweets/:id/purchase
+// @desc    Purchase a sweet, decreasing its quantity
+// @access  Private
+router.post('/:id/purchase', auth, async (req, res) => {
+  const { quantity } = req.body;
+
+  try {
+    let sweet = await Sweet.findById(req.params.id);
+
+    if (!sweet) {
+      return res.status(404).json({ msg: 'Sweet not found' });
+    }
+
+    if (sweet.quantity < quantity) {
+      return res.status(400).json({ msg: 'Not enough quantity in stock' });
+    }
+
+    sweet.quantity -= quantity;
+    await sweet.save();
+
+    res.json(sweet);
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).send('Server Error');
+  }
+});
+
+// @route   POST /api/sweets/:id/restock
+// @desc    Restock a sweet, increasing its quantity
+// @access  Private (Admin only)
+router.post('/:id/restock', auth, admin, async (req, res) => {
+  const { quantity } = req.body;
+
+  try {
+    let sweet = await Sweet.findById(req.params.id);
+
+    if (!sweet) {
+      return res.status(404).json({ msg: 'Sweet not found' });
+    }
+
+    sweet.quantity += quantity;
+    await sweet.save();
+
+    res.json(sweet);
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).send('Server Error');
+  }
+});
+
 module.exports = router;
