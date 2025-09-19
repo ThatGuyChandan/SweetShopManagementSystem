@@ -72,7 +72,7 @@ const SweetList = () => {
 
   return (
     <div className="sweet-list-container">
-      <h2>Available Sweets</h2>
+      <h3>Available Sweets</h3>
       <div className="filters">
         <input
           type="text"

@@ -61,20 +61,6 @@ const PrivateRoute = ({ children, allowedRoles }) => {
 };
 
 // Components
-const Home = () => {
-  const { user } = useContext(AuthContext);
-  return (
-    <div>
-      <h1>Welcome to Sweet Shop!</h1>
-      {user ? (
-        <p>Hello, {user.id} ({user.role})</p>
-      ) : (
-        <p>Please log in or register.</p>
-      )}
-    </div>
-  );
-};
-
 const Login = () => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
@@ -102,17 +88,14 @@ const Login = () => {
         if (!isRegister) {
           login(data.token);
           navigate('/');
-        }
-        else {
+        } else {
           setMessage('Registration successful! Please log in.');
           setIsRegister(false);
         }
-      }
-      else {
+      } else {
         setMessage(data.msg || 'An error occurred');
       }
-    }
-    catch (error) {
+    } catch (error) {
       setMessage('Network error');
       console.error('Auth error:', error);
     }
@@ -143,9 +126,9 @@ const Login = () => {
         <button type="submit">{isRegister ? 'Register' : 'Login'}</button>
       </form>
       <p>{message}</p>
-      <button onClick={() => setIsRegister(!isRegister)}>
+      <p className="auth-toggle-link" onClick={() => setIsRegister(!isRegister)}>
         {isRegister ? 'Already have an account? Login' : "Don't have an account? Register"}
-      </button>
+      </p>
     </div>
   );
 };
@@ -154,6 +137,8 @@ const Navbar = () => {
   const { user, logout } = useContext(AuthContext);
   const navigate = useNavigate();
 
+  console.log('User object in Navbar:', user); // Debugging line
+
   const handleLogout = () => {
     logout();
     navigate('/login');
@@ -161,14 +146,21 @@ const Navbar = () => {
 
   return (
     <nav className="navbar">
-      <Link to="/">Home</Link>
-      {user && <Link to="/sweets">Sweets</Link>}
-      {user && user.role === 'admin' && <Link to="/admin/sweets">Manage Sweets</Link>}
-      {!user ? (
-        <Link to="/login">Login/Register</Link>
-      ) : (
-        <button onClick={handleLogout}>Logout</button>
-      )}
+      <Link to="/" className="navbar-brand">Sweet Shop</Link>
+      <div className="navbar-links">
+        {user && user.role === 'admin' && <Link to="/admin/sweets">Manage Sweets</Link>}
+        {!user ? (
+          <>
+            <Link to="/login">Login</Link>
+            <Link to="/login">Register</Link>
+          </>
+        ) : (
+          <>
+            <span className="navbar-welcome">Welcome, {user.username}!</span>
+            <button onClick={handleLogout}>Logout</button>
+          </>
+        )}
+      </div>
     </nav>
   );
 };
@@ -180,16 +172,15 @@ function App() {
         <Navbar />
         <div className="container">
           <Routes>
-            <Route path="/" element={<Home />} />
-            <Route path="/login" element={<Login />} />
             <Route
-              path="/sweets"
+              path="/"
               element={
                 <PrivateRoute>
                   <SweetList />
                 </PrivateRoute>
               }
             />
+            <Route path="/login" element={<Login />} />
             <Route
               path="/admin/sweets"
               element={
