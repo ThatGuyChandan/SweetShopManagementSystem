@@ -1,8 +1,8 @@
-const expres = require("express");
-const app = expres();
-const port = 3000;
+const express = require("express");
+const app = express();
 const mongoose = require("mongoose");
 require("dotenv").config();
+const port = process.env.PORT || 5000;
 
 mongoose
   .connect(process.env.MONGO_URL, {
@@ -11,6 +11,11 @@ mongoose
   })
   .then(() => console.log("Connected to MongoDB"))
   .catch((err) => console.error("Could not connect to MongoDB", err));
+
+app.use(express.json());
+
+app.use('/api/auth', require('./routes/auth'));
+app.use('/api/sweets', require('./routes/sweets'));
 
 app.get("/", (req, res) => {
   res.send("Hello World!");
