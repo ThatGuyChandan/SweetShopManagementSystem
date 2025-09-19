@@ -1,5 +1,5 @@
-import React, { useState, useEffect, useContext } from 'react';
-import { AuthContext } from '../App'; // Assuming AuthContext is exported from App.js
+import React, { useState, useEffect, useContext, useCallback } from 'react';
+import { AuthContext } from './App'; // Assuming AuthContext is exported from App.js
 
 const SweetList = () => {
   const [sweets, setSweets] = useState([]);
@@ -10,7 +10,7 @@ const SweetList = () => {
   const [message, setMessage] = useState('');
   const { token } = useContext(AuthContext);
 
-  const fetchSweets = async () => {
+  const fetchSweets = useCallback(async () => {
     try {
       let url = '/api/sweets';
       const params = new URLSearchParams();
@@ -39,13 +39,13 @@ const SweetList = () => {
       setMessage('Network error');
       console.error('Fetch sweets error:', error);
     }
-  };
+  }, [token, searchQuery, categoryFilter, minPrice, maxPrice]);
 
   useEffect(() => {
     if (token) {
       fetchSweets();
     }
-  }, [token, searchQuery, categoryFilter, minPrice, maxPrice]);
+  }, [token, fetchSweets]);
 
   const handlePurchase = async (sweetId) => {
     try {

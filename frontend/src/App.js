@@ -1,6 +1,7 @@
 import React, { useState, useEffect, createContext, useContext } from 'react';
-import { BrowserRouter as Router, Route, Routes, Link, useNavigate, Outlet, Navigate } from 'react-router-dom';
-import SweetList from './SweetList'; // Import SweetList
+import { BrowserRouter as Router, Route, Routes, Link, useNavigate, Navigate } from 'react-router-dom';
+import SweetList from './SweetList';
+import AdminSweets from './AdminSweets'; // Import AdminSweets
 import './App.css';
 
 // Auth Context
@@ -92,7 +93,7 @@ const Login = () => {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON_stringify({ username, password, role: isRegister ? 'customer' : undefined }),
+        body: JSON.stringify({ username, password, role: isRegister ? 'customer' : undefined }),
       });
 
       const data = await response.json();
@@ -143,7 +144,7 @@ const Login = () => {
       </form>
       <p>{message}</p>
       <button onClick={() => setIsRegister(!isRegister)}>
-        {isRegister ? 'Already have an account? Login' : 'Don't have an account? Register'}
+        {isRegister ? 'Already have an account? Login' : "Don't have an account? Register"}
       </button>
     </div>
   );
@@ -162,6 +163,7 @@ const Navbar = () => {
     <nav className="navbar">
       <Link to="/">Home</Link>
       {user && <Link to="/sweets">Sweets</Link>}
+      {user && user.role === 'admin' && <Link to="/admin/sweets">Manage Sweets</Link>}
       {!user ? (
         <Link to="/login">Login/Register</Link>
       ) : (
@@ -188,7 +190,14 @@ function App() {
                 </PrivateRoute>
               }
             />
-            {/* Admin routes will go here */}
+            <Route
+              path="/admin/sweets"
+              element={
+                <PrivateRoute allowedRoles={['admin']}>
+                  <AdminSweets />
+                </PrivateRoute>
+              }
+            />
           </Routes>
         </div>
       </AuthProvider>
