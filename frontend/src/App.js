@@ -76,7 +76,7 @@ const Login = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setMessages([]);
-    const url = `/api/auth/${isRegister ? 'register' : 'login'}`;
+    const url = `${process.env.REACT_APP_API_URL}/api/auth/${isRegister ? 'register' : 'login'}`;
     try {
       const response = await fetch(url, {
         method: 'POST',
@@ -108,7 +108,6 @@ const Login = () => {
     } catch (error) {
       setMessageType('error');
       setMessages(['Network error']);
-      console.error('Auth error:', error);
     }
   };
 
@@ -170,8 +169,6 @@ const Login = () => {
 const Navbar = () => {
   const { user, logout } = useContext(AuthContext);
   const navigate = useNavigate();
-
-  console.log('User object in Navbar:', user); // Debugging line
 
   const handleLogout = () => {
     logout();

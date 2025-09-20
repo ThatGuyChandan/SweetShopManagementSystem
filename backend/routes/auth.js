@@ -40,7 +40,6 @@ router.post(
 
       res.status(201).json({ msg: 'User registered successfully' });
     } catch (err) {
-      console.error(err.message);
       res.status(500).json({ msg: 'Server error' });
     }
   }
@@ -90,7 +89,6 @@ router.post(
         }
       );
     } catch (err) {
-      console.error(err.message);
       res.status(500).json({ msg: 'Server error' });
     }
   }

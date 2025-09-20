@@ -34,7 +34,6 @@ router.post(
       const sweet = await newSweet.save();
       res.json(sweet);
     } catch (err) {
-      console.error(err.message);
       res.status(500).json({ msg: 'Server Error' });
     }
   }
@@ -48,7 +47,6 @@ router.get('/', auth, async (req, res) => {
     const sweets = await Sweet.find();
     res.json(sweets);
   } catch (err) {
-    console.error(err.message);
     res.status(500).json({ msg: 'Server Error' });
   }
 });
@@ -80,7 +78,6 @@ router.get('/search', auth, async (req, res) => {
     const sweets = await Sweet.find(query);
     res.json(sweets);
   } catch (err) {
-    console.error(err.message);
     res.status(500).json({ msg: 'Server Error' });
   }
 });
@@ -111,7 +108,6 @@ router.put('/:id', [auth, admin], async (req, res) => {
 
     res.json(sweet);
   } catch (err) {
-    console.error(err.message);
     res.status(500).json({ msg: 'Server Error' });
   }
 });
@@ -129,7 +125,6 @@ router.delete('/:id', auth, admin, async (req, res) => {
 
     res.json({ msg: 'Sweet removed' });
   } catch (err) {
-    console.error(err.message);
     res.status(500).json({ msg: 'Server Error' });
   }
 });
@@ -156,7 +151,6 @@ router.post('/:id/purchase', auth, async (req, res) => {
 
     res.json(sweet);
   } catch (err) {
-    console.error(err.message);
     res.status(500).json({ msg: 'Server Error' });
   }
 });
@@ -179,7 +173,6 @@ router.post('/:id/restock', auth, admin, async (req, res) => {
 
     res.json(sweet);
   } catch (err) {
-    console.error(err.message);
     res.status(500).json({ msg: 'Server Error' });
   }
 });

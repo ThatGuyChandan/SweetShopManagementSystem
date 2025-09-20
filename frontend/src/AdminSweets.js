@@ -13,7 +13,7 @@ const AdminSweets = () => {
 
   const fetchSweets = useCallback(async () => {
     try {
-      const response = await fetch('/api/sweets', {
+      const response = await fetch(`${process.env.REACT_APP_API_URL}/api/sweets`, {
         headers: {
           'x-auth-token': token,
         },
@@ -28,7 +28,6 @@ const AdminSweets = () => {
     } catch (error) {
       setMessageType('error');
       setMessage('Network error');
-      console.error('Fetch sweets error:', error);
     }
   }, [token]);
 
@@ -40,7 +39,7 @@ const AdminSweets = () => {
 
   const handleDelete = async (sweetId) => {
     try {
-      const response = await fetch(`/api/sweets/${sweetId}`, {
+      const response = await fetch(`${process.env.REACT_APP_API_URL}/api/sweets/${sweetId}`, {
         method: 'DELETE',
         headers: {
           'x-auth-token': token,
@@ -58,14 +57,13 @@ const AdminSweets = () => {
     } catch (error) {
       setMessageType('error');
       setMessage('Network error');
-      console.error('Delete sweet error:', error);
     }
     setIsModalOpen(false);
   };
 
   const handleRestock = async (sweetId, quantity) => {
     try {
-      const response = await fetch(`/api/sweets/${sweetId}/restock`, {
+      const response = await fetch(`${process.env.REACT_APP_API_URL}/api/sweets/${sweetId}/restock`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -85,7 +83,6 @@ const AdminSweets = () => {
     } catch (error) {
       setMessageType('error');
       setMessage('Network error');
-      console.error('Restock error:', error);
     }
     setIsModalOpen(false);
   };

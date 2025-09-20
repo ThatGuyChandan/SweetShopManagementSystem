@@ -13,7 +13,7 @@ const SweetList = () => {
 
   const fetchSweets = useCallback(async () => {
     try {
-      let url = '/api/sweets';
+      let url = `${process.env.REACT_APP_API_URL}/api/sweets`;
       const params = new URLSearchParams();
 
       if (searchQuery) params.append('name', searchQuery);
@@ -22,7 +22,7 @@ const SweetList = () => {
       if (maxPrice) params.append('maxPrice', maxPrice);
 
       if (params.toString()) {
-        url = `/api/sweets/search?${params.toString()}`;
+        url = `${process.env.REACT_APP_API_URL}/api/sweets/search?${params.toString()}`;
       }
 
       const response = await fetch(url, {
@@ -34,11 +34,12 @@ const SweetList = () => {
       if (response.ok) {
         setSweets(data);
       } else {
+        setMessageType('error');
         setMessage(data.msg || 'Failed to fetch sweets');
       }
     } catch (error) {
+      setMessageType('error');
       setMessage('Network error');
-      console.error('Fetch sweets error:', error);
     }
   }, [token, searchQuery, categoryFilter, minPrice, maxPrice]);
 
@@ -50,7 +51,7 @@ const SweetList = () => {
 
   const handlePurchase = async (sweetId) => {
     try {
-      const response = await fetch(`/api/sweets/${sweetId}/purchase`, {
+      const response = await fetch(`${process.env.REACT_APP_API_URL}/api/sweets/${sweetId}/purchase`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -68,8 +69,8 @@ const SweetList = () => {
         setMessage(data.msg || 'Failed to purchase sweet');
       }
     } catch (error) {
+      setMessageType('error');
       setMessage('Network error');
-      console.error('Purchase error:', error);
     }
   };
 

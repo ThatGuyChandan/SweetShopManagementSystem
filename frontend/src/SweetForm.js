@@ -28,7 +28,9 @@ const SweetForm = ({ sweetToEdit, onSweetSaved }) => {
     setMessage('');
 
     const method = sweetToEdit ? 'PUT' : 'POST';
-    const url = sweetToEdit ? `/api/sweets/${sweetToEdit._id}` : '/api/sweets';
+    const url = sweetToEdit
+      ? `${process.env.REACT_APP_API_URL}/api/sweets/${sweetToEdit._id}`
+      : `${process.env.REACT_APP_API_URL}/api/sweets`;
 
     try {
       const response = await fetch(url, {
@@ -49,7 +51,6 @@ const SweetForm = ({ sweetToEdit, onSweetSaved }) => {
       }
     } catch (error) {
       setMessage('Network error');
-      console.error('Sweet form error:', error);
     }
   };
 

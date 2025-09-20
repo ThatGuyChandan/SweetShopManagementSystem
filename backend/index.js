@@ -12,10 +12,13 @@ mongoose
   .then(() => console.log("Connected to MongoDB"))
   .catch((err) => console.error("Could not connect to MongoDB", err));
 
-app.use(express.json());
+const cors = require('cors');
 
-app.use('/api/auth', require('./routes/auth'));
-app.use('/api/sweets', require('./routes/sweets'));
+app.use(express.json());
+app.use(cors({ origin: process.env.CORS_ORIGIN }));
+
+app.use("/api/auth", require("./routes/auth"));
+app.use("/api/sweets", require("./routes/sweets"));
 
 app.get("/", (req, res) => {
   res.send("Hello World!");
