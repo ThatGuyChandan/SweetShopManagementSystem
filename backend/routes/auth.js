@@ -76,6 +76,7 @@ router.post(
         user: {
           id: user.id,
           role: user.role,
+          username: user.username,
         },
       };
 
