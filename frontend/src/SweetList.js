@@ -8,6 +8,7 @@ const SweetList = () => {
   const [minPrice, setMinPrice] = useState('');
   const [maxPrice, setMaxPrice] = useState('');
   const [message, setMessage] = useState('');
+  const [messageType, setMessageType] = useState('');
   const { token } = useContext(AuthContext);
 
   const fetchSweets = useCallback(async () => {
@@ -59,9 +60,11 @@ const SweetList = () => {
       });
       const data = await response.json();
       if (response.ok) {
+        setMessageType('success');
         setMessage(`Purchased ${data.name}!`);
         fetchSweets(); // Refresh the list
       } else {
+        setMessageType('error');
         setMessage(data.msg || 'Failed to purchase sweet');
       }
     } catch (error) {
@@ -72,6 +75,7 @@ const SweetList = () => {
 
   return (
     <div className="sweet-list-container">
+      <h2>Welcome to the Sweet Shop!</h2>
       <h3>Available Sweets</h3>
       <div className="filters">
         <input
@@ -100,7 +104,7 @@ const SweetList = () => {
         />
         <button onClick={fetchSweets}>Apply Filters</button>
       </div>
-      {message && <p className="message">{message}</p>}
+      {message && <p className={`message ${messageType}`}>{message}</p>}
       <div className="sweets-grid">
         {sweets.length > 0 ? (
           sweets.map((sweet) => (

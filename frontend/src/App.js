@@ -66,6 +66,7 @@ const Login = () => {
   const [password, setPassword] = useState('');
   const [isRegister, setIsRegister] = useState(false);
   const [message, setMessage] = useState('');
+  const [messageType, setMessageType] = useState('');
   const { login } = useContext(AuthContext);
   const navigate = useNavigate();
 
@@ -89,10 +90,12 @@ const Login = () => {
           login(data.token);
           navigate('/');
         } else {
+          setMessageType('success');
           setMessage('Registration successful! Please log in.');
           setIsRegister(false);
         }
       } else {
+        setMessageType('error');
         setMessage(data.msg || 'An error occurred');
       }
     } catch (error) {
@@ -125,7 +128,7 @@ const Login = () => {
         </div>
         <button type="submit">{isRegister ? 'Register' : 'Login'}</button>
       </form>
-      <p>{message}</p>
+      <p className={`message ${messageType}`}>{message}</p>
       <p className="auth-toggle-link" onClick={() => setIsRegister(!isRegister)}>
         {isRegister ? 'Already have an account? Login' : "Don't have an account? Register"}
       </p>

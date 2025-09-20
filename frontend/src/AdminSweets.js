@@ -5,6 +5,7 @@ import SweetForm from './SweetForm';
 const AdminSweets = () => {
   const [sweets, setSweets] = useState([]);
   const [message, setMessage] = useState('');
+  const [messageType, setMessageType] = useState('');
   const [sweetToEdit, setSweetToEdit] = useState(null);
   const { token } = useContext(AuthContext);
 
@@ -44,9 +45,11 @@ const AdminSweets = () => {
         });
         const data = await response.json();
         if (response.ok) {
+          setMessageType('success');
           setMessage(data.msg);
           fetchSweets();
         } else {
+          setMessageType('error');
           setMessage(data.msg || 'Failed to delete sweet');
         }
       } catch (error) {
@@ -70,9 +73,11 @@ const AdminSweets = () => {
         });
         const data = await response.json();
         if (response.ok) {
+          setMessageType('success');
           setMessage(`Restocked ${data.name} by ${restockQuantity}`);
           fetchSweets();
         } else {
+          setMessageType('error');
           setMessage(data.msg || 'Failed to restock sweet');
         }
       } catch (error) {
@@ -85,7 +90,7 @@ const AdminSweets = () => {
   return (
     <div className="admin-sweets-container">
       <h2>Manage Sweets (Admin)</h2>
-      {message && <p className="message">{message}</p>}
+      {message && <p className={`message ${messageType}`}>{message}</p>}
 
       <SweetForm sweetToEdit={sweetToEdit} onSweetSaved={() => { fetchSweets(); setSweetToEdit(null); }} />
 
