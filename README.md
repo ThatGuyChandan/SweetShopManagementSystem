@@ -1,70 +1,71 @@
-# Getting Started with Create React App
+# Sweet Shop Management System
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+This is a full-stack web application for managing a sweet shop. It includes features for user authentication, browsing sweets, purchasing items, and admin-only functionalities for managing the inventory.
 
-## Available Scripts
+## Features
 
-In the project directory, you can run:
+- User registration and login with JWT authentication.
+- Browse and search for sweets by name, category, and price.
+- Purchase sweets (quantity decreases).
+- Admin panel to add, update, and delete sweets.
+- Admins can restock sweets.
 
-### `npm start`
+## Technologies Used
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+- **Frontend:** React, React Router
+- **Backend:** Node.js, Express, MongoDB, Mongoose
+- **Authentication:** JSON Web Tokens (JWT)
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+## Setup and Installation
 
-### `npm test`
+### Prerequisites
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+- Node.js and npm
+- MongoDB
 
-### `npm run build`
+### Backend Setup
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+1.  Navigate to the `backend` directory:
+    ```sh
+    cd backend
+    ```
+2.  Install the dependencies:
+    ```sh
+    npm install
+    ```
+3.  Create a `.env` file in the `backend` directory with the following content:
+    ```
+    MONGO_URL=your_mongodb_connection_string
+    JWT_SECRET=your_jwt_secret
+    ```
+4.  Start the backend server:
+    ```sh
+    npm start
+    ```
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+### Frontend Setup
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+1.  Navigate to the `frontend` directory:
+    ```sh
+    cd frontend
+    ```
+2.  Install the dependencies:
+    ```sh
+    npm install
+    ```
+3.  Start the frontend development server:
+    ```sh
+    npm start
+    ```
 
-### `npm run eject`
+The application will be available at `http://localhost:3000`.
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+## My AI Usage
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+I have used an AI assistant to help with the following tasks:
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+- **UI/UX Improvement:** I asked the AI to improve the UI/UX of the application to make it more professional. The AI analyzed the existing CSS and then provided a new, more modern design, which I implemented.
+- **Code Generation:** I used the AI to generate some boilerplate code for the components and to help with the implementation of the new UI.
+- **Debugging:** I used the AI to help debug some issues I encountered during development.
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+Overall, the AI assistant was a valuable tool that helped me to complete the project more efficiently. It was particularly helpful for the UI/UX design, as it provided a fresh perspective and helped me to create a more professional-looking application.
