@@ -67,7 +67,7 @@ const Login = () => {
   const [password, setPassword] = useState('');
   const [role, setRole] = useState('customer');
   const [isRegister, setIsRegister] = useState(false);
-  const [message, setMessage] = useState('');
+  const [messages, setMessages] = useState([]);
   const [messageType, setMessageType] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const { login } = useContext(AuthContext);
@@ -75,7 +75,7 @@ const Login = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setMessage('');
+    setMessages([]);
     const url = `/api/auth/${isRegister ? 'register' : 'login'}`;
     try {
       const response = await fetch(url, {
@@ -94,16 +94,20 @@ const Login = () => {
           navigate('/');
         } else {
           setMessageType('success');
-          setMessage('Registration successful! Please log in.');
+          setMessages(['Registration successful! Please log in.']);
           setIsRegister(false);
         }
       } else {
         setMessageType('error');
-        setMessage(data.msg || 'An error occurred');
+        if (data.errors) {
+          setMessages(data.errors.map(err => err.msg));
+        } else {
+          setMessages([data.msg || 'An error occurred']);
+        }
       }
     } catch (error) {
       setMessageType('error');
-      setMessage('Network error');
+      setMessages(['Network error']);
       console.error('Auth error:', error);
     }
   };
@@ -121,7 +125,7 @@ const Login = () => {
             required
           />
         </div>
-          <div>
+        <div>
           <label>Password:</label>
           <div className="password-container">
             <input
@@ -150,14 +154,19 @@ const Login = () => {
         )}
         <button type="submit">{isRegister ? 'Register' : 'Login'}</button>
       </form>
-      {message && <p className={`message ${messageType}`}>{message}</p>}
+      {messages.length > 0 && (
+        <div className={`message ${messageType}`}>
+          <ul>
+            {messages.map((msg, index) => <li key={index}>{msg}</li>)}
+          </ul>
+        </div>
+      )}
       <p className="auth-toggle-link" onClick={() => setIsRegister(!isRegister)}>
         {isRegister ? 'Already have an account? Login' : "Don't have an account? Register"}
       </p>
     </div>
   );
 };
-
 const Navbar = () => {
   const { user, logout } = useContext(AuthContext);
   const navigate = useNavigate();
