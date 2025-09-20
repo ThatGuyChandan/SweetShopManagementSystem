@@ -43,14 +43,7 @@ const SweetForm = ({ sweetToEdit, onSweetSaved }) => {
       const data = await response.json();
 
       if (response.ok) {
-        setMessage(`Sweet ${sweetToEdit ? 'updated' : 'added'} successfully!`);
-        onSweetSaved(); // Callback to refresh list
-        if (!sweetToEdit) {
-          setName('');
-          setCategory('');
-          setPrice('');
-          setQuantity('');
-        }
+        onSweetSaved();
       } else {
         setMessage(data.msg || 'An error occurred');
       }
@@ -61,10 +54,9 @@ const SweetForm = ({ sweetToEdit, onSweetSaved }) => {
   };
 
   return (
-    <div className="sweet-form-container">
-      <h3>{sweetToEdit ? 'Edit Sweet' : 'Add New Sweet'}</h3>
-      <form onSubmit={handleSubmit}>
-        <div>
+    <form onSubmit={handleSubmit} className="sweet-form">
+      <div className="form-grid">
+        <div className="form-group">
           <label>Name:</label>
           <input
             type="text"
@@ -73,7 +65,7 @@ const SweetForm = ({ sweetToEdit, onSweetSaved }) => {
             required
           />
         </div>
-        <div>
+        <div className="form-group">
           <label>Category:</label>
           <input
             type="text"
@@ -82,7 +74,7 @@ const SweetForm = ({ sweetToEdit, onSweetSaved }) => {
             required
           />
         </div>
-        <div>
+        <div className="form-group">
           <label>Price:</label>
           <input
             type="number"
@@ -91,7 +83,7 @@ const SweetForm = ({ sweetToEdit, onSweetSaved }) => {
             required
           />
         </div>
-        <div>
+        <div className="form-group">
           <label>Quantity:</label>
           <input
             type="number"
@@ -100,10 +92,12 @@ const SweetForm = ({ sweetToEdit, onSweetSaved }) => {
             required
           />
         </div>
-        <button type="submit">{sweetToEdit ? 'Update Sweet' : 'Add Sweet'}</button>
-      </form>
-      {message && <p className="message">{message}</p>}
-    </div>
+      </div>
+      <div className="form-actions">
+        <button type="submit" className="btn-primary">{sweetToEdit ? 'Update Sweet' : 'Add Sweet'}</button>
+      </div>
+      {message && <p className="message error">{message}</p>}
+    </form>
   );
 };
 
